@@ -10,34 +10,27 @@
 FROM       centos
 MAINTAINER Michal Fojtik <mfojtik@redhat.com>
 
-# Pull in important updates and then install ruby193 SCL
+# Pull in important updates and then install ruby193
 #
-RUN yum update --assumeyes && \
-      yum install --assumeyes centos-release-SCL gettext tar which && \
-      yum install --assumeyes ruby193 ruby193-ruby-devel \
-      gcc-c++ automake autoconf curl-devel openssl-devel \
-      zlib-devel libxslt-devel libxml2-devel \
-      mysql-libs mysql-devel postgresql-devel sqlite-devel \
-      nodejs010-nodejs && \
-      yum clean all
+RUN yum install --assumeyes centos-release-SCL && ( \
+     echo "update"; \
+     echo "install gettext tar which ruby193-ruby ruby193-ruby-devel"; \
+     echo "install ruby193-rubygem-bundler ruby193-rubygem-rake"; \
+     echo "install gcc-c++ automake autoconf curl-devel openssl-devel"; \
+     echo "install zlib-devel libxslt-devel libxml2-devel"; \
+     echo "install mysql-libs mysql-devel postgresql-devel sqlite-devel"; \
+     echo "install nodejs010-nodejs"; \
+     echo "run" ) | yum shell --assumeyes && yum clean all --assumeyes
 
 # Create 'ruby' account we will use to run Ruby application
 #
-RUN mkdir -p /opt/ruby/{gems,run,src,bin} && \
-      groupadd -r ruby -f -g 433 && \
-      useradd -u 431 -r -g ruby -d /opt/ruby -s /sbin/nologin -c "Ruby application" ruby
-
 ADD ./bin /opt/ruby/bin/
 ADD ./etc /opt/ruby/etc/
 
-# FIXME: The STI require all scripts in /usr/bin path, this layer is here to
-#        maintain backward compatibility
-#
-RUN cp -f /opt/ruby/bin/prepare /usr/bin/prepare && \
-    cp -f /opt/ruby/bin/run /usr/bin/run && \
-    cp -f /opt/ruby/bin/save-artifacts /usr/bin/save-artifacts
-
-RUN chown -R ruby:ruby /opt/ruby
+RUN mkdir -p /opt/ruby/{gems,run,src} && \
+      groupadd -r ruby -f -g 433 && \
+      useradd -u 431 -r -g ruby -d /opt/ruby -s /sbin/nologin -c "Ruby User" ruby && \
+      chown -R ruby:ruby /opt/ruby
 
 # Set the 'root' directory where this build will search for Gemfile and
 # config.ru.
@@ -52,10 +45,10 @@ ENV APP_ROOT .
 ENV HOME     /opt/ruby
 ENV PATH     $HOME/bin:$PATH
 
-# FIXME: This might be a potential bug in STI where if we keep the USER
-# instruction here, the resulting application image will fail to run.
-#
-# USER ruby
+ENV STI_SCRIPTS_URL https://raw.githubusercontent.com/openshift/ruby-19-centos/master/contrib/sti
+
+WORKDIR     /opt/ruby/src
+USER ruby
 
 EXPOSE 9292
 

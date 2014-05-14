@@ -1,8 +1,14 @@
-#!/bin/sh -e
+#!/bin/bash -e
+#
+# Default STI assemble script for the 'centos-ruby' image.
+#
 
-source ${HOME}/etc/sdk
-
-restore_build_artifacts
+if [ -e /tmp/artifacts/gems.tgz ]; then
+  echo "Restoring build artifacts"
+  pushd / >/dev/null
+  tar zxf /tmp/artifacts/gems.tgz
+  popd >/dev/null
+fi
 
 app_runtime_dir="${HOME}/src"
 app_src_dir="/tmp/src"
@@ -28,8 +34,7 @@ if [ -f Gemfile ]; then
   else
     BUNDLE_WITHOUT=${BUNDLE_WITHOUT:-"development:test"}
   fi
-
-  bundle_install --path ${HOME}/bundle ${ADDTL_BUNDLE_ARGS}
+  ruby_context bundle install --path ${HOME}/bundle ${ADDTL_BUNDLE_ARGS}
 fi
 
 # TODO: Add `rake assets:precompile` step here for Rails applications
