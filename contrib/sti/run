@@ -1,6 +1,13 @@
 #!/bin/bash -e
 
-source /opt/ruby/etc/sdk
+function is_puma_installed() {
+  [ ! -f Gemfile.lock ] && return 1
+  grep ' puma ' Gemfile.lock >/dev/null
+}
+
+function bundle_exec() {
+  exec ruby_context bundle exec "$@"
+}
 
 # The app_root_dir needs to be exported, so the Puma or other Ruby
 # application server can pick it up and use it as 'application root'

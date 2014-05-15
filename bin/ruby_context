@@ -1,7 +1,5 @@
 #!/bin/sh
 
-source /opt/ruby/etc/sdk
-
 export GEM_HOME=${HOME}/gems
 export GEMRC=${HOME}/etc/gemrc
 export EXECJS_RUNTIME=Node
