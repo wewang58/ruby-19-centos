@@ -45,7 +45,7 @@ ENV APP_ROOT .
 ENV HOME     /opt/ruby
 ENV PATH     $HOME/bin:$PATH
 
-ENV STI_SCRIPTS_URL https://raw.githubusercontent.com/openshift/ruby-19-centos/master/contrib/sti
+ENV STI_SCRIPTS_URL https://raw.githubusercontent.com/openshift/ruby-19-centos/master/.sti/bin
 
 WORKDIR     /opt/ruby/src
 USER ruby
