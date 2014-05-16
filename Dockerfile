@@ -27,10 +27,12 @@ RUN yum install --assumeyes centos-release-SCL && ( \
 ADD ./bin /opt/ruby/bin/
 ADD ./etc /opt/ruby/etc/
 
+
 RUN mkdir -p /opt/ruby/{gems,run,src} && \
       groupadd -r ruby -f -g 433 && \
       useradd -u 431 -r -g ruby -d /opt/ruby -s /sbin/nologin -c "Ruby User" ruby && \
-      chown -R ruby:ruby /opt/ruby
+      chown -R ruby:ruby /opt/ruby && \
+      mv /opt/ruby/etc/bashrc /opt/ruby/.bashrc
 
 # Set the 'root' directory where this build will search for Gemfile and
 # config.ru.
