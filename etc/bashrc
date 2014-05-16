@@ -4,8 +4,3 @@ source /opt/rh/ruby193/enable
 source /opt/rh/nodejs010/enable
 
 export X_SCLS="`scl enable ruby193 nodejs010 'echo $X_SCLS'`"
-
-function is_puma_installed() {
-  [ ! -f Gemfile.lock ] && return 1
-  grep ' puma ' Gemfile.lock >/dev/null
-}
