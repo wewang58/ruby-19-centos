@@ -5,6 +5,18 @@
 
 [ -f ${HOME}/.bashrc ] && source ${HOME}/.bashrc
 
+function rake_assets_precompile() {
+  [ -f .sti/markers/disable_asset_compilation ] && return 1
+  [ ! -f Gemfile ] && return 1
+  [ ! -f Rakefile ] && return 1
+  ! grep " rails " Gemfile.lock >/dev/null && return 1
+  ! grep " execjs " Gemfile.lock >/dev/null && return 1
+  ! bundle exec "rake -T" | grep "assets:precompile" >/dev/null && return 1
+
+  echo "---> Starting asset compilation."
+  bundle exec rake assets:precompile
+}
+
 if [ -e /tmp/artifacts/gems.tgz ]; then
   echo "Restoring build artifacts"
   pushd / >/dev/null
@@ -43,7 +55,8 @@ if [ -f Gemfile ]; then
   bundle install --path ${HOME}/bundle ${ADDTL_BUNDLE_ARGS}
 fi
 
-# TODO: Add `rake assets:precompile` step here for Rails applications
+rake_assets_precompile
+
 # TODO: Add `rake db:migrate` if linked with DB container
 
 popd >/dev/null
