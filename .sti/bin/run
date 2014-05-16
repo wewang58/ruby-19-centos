@@ -1,12 +1,10 @@
 #!/bin/bash -e
 
+[ -f ${HOME}/.bashrc ] && source ${HOME}/.bashrc
+
 function is_puma_installed() {
   [ ! -f Gemfile.lock ] && return 1
   grep ' puma ' Gemfile.lock >/dev/null
-}
-
-function bundle_exec() {
-  exec ruby_context bundle exec "$@"
 }
 
 # The app_root_dir needs to be exported, so the Puma or other Ruby
@@ -25,8 +23,8 @@ cd $app_root_dir
 [ "$1" == "--debug" ] && exec /bin/bash
 
 if is_puma_installed; then
-  bundle_exec "puma --config ${HOME}/etc/puma.cfg"
+  exec bundle exec "puma --config ${HOME}/etc/puma.cfg"
 else
   echo "You might consider adding 'puma' into your Gemfile."
-  bundle_exec "rackup -P ${HOME}/run/rack.pid --host 0.0.0.0"
+  exec bundle exec "rackup -P ${HOME}/run/rack.pid --host 0.0.0.0"
 fi

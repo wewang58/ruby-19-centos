@@ -3,6 +3,8 @@
 # Default STI assemble script for the 'centos-ruby' image.
 #
 
+[ -f ${HOME}/.bashrc ] && source ${HOME}/.bashrc
+
 if [ -e /tmp/artifacts/gems.tgz ]; then
   echo "Restoring build artifacts"
   pushd / >/dev/null
@@ -34,7 +36,11 @@ if [ -f Gemfile ]; then
   else
     BUNDLE_WITHOUT=${BUNDLE_WITHOUT:-"development:test"}
   fi
-  ruby_context bundle install --path ${HOME}/bundle ${ADDTL_BUNDLE_ARGS}
+  # We can't use 'exec' here because it will exit from the script after the
+  # bundle install command finish. Thus the bundle install cannot receive SIGINT
+  # from console (ctrl+c)
+  #
+  bundle install --path ${HOME}/bundle ${ADDTL_BUNDLE_ARGS}
 fi
 
 # TODO: Add `rake assets:precompile` step here for Rails applications
