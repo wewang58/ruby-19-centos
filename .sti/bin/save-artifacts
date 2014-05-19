@@ -1,6 +1,11 @@
 #!/bin/sh -e
 
-echo "Saving build-artifacts"
-if [ -d /opt/ruby/bundle/ruby ]; then
-  tar zcf /tmp/artifacts/gems.tgz /opt/ruby/bundle/ruby
+echo "---> Saving build-artifacts"
+
+pushd ${HOME} >/dev/null
+
+if [ -d ./bundle/ruby -a -d ./Gemfile.lock ]; then
+  tar zcf /tmp/artifacts/gems.tgz {./bundle/ruby,./Gemfile.lock}
 fi
+
+popd >/dev/null
