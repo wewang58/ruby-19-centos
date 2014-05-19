@@ -5,7 +5,7 @@ echo "---> Saving build-artifacts"
 pushd ${HOME} >/dev/null
 
 if [ -d ./bundle/ruby -a -d ./Gemfile.lock ]; then
-  tar zcf /tmp/artifacts/gems.tgz {./bundle/ruby,./Gemfile.lock}
+  tar zcf /tmp/artifacts/gems.tgz bundle/ruby Gemfile.lock
 fi
 
 popd >/dev/null

@@ -22,17 +22,21 @@ RUN yum install --assumeyes centos-release-SCL && ( \
      echo "install nodejs010-nodejs"; \
      echo "run" ) | yum shell --assumeyes && yum clean all --assumeyes
 
-# Create 'ruby' account we will use to run Ruby application
+
+# Add configuration files, bashrc and other tweaks
 #
-ADD ./bin /opt/ruby/bin/
-ADD ./etc /opt/ruby/etc/
+ADD ./ruby /opt/ruby/
 
+ENV STI_SCRIPTS_URL https://raw.githubusercontent.com/openshift/ruby-19-centos/master/.sti/bin
 
+# Create 'ruby' account we will use to run Ruby application
+# Add support for '#!/usr/bin/ruby' shebang.
+#
 RUN mkdir -p /opt/ruby/{gems,run,src} && \
       groupadd -r ruby -f -g 433 && \
       useradd -u 431 -r -g ruby -d /opt/ruby -s /sbin/nologin -c "Ruby User" ruby && \
       chown -R ruby:ruby /opt/ruby && \
-      mv /opt/ruby/etc/bashrc /opt/ruby/.bashrc
+      mv -f /opt/ruby/bin/ruby /usr/bin/ruby
 
 # Set the 'root' directory where this build will search for Gemfile and
 # config.ru.
@@ -46,8 +50,6 @@ RUN mkdir -p /opt/ruby/{gems,run,src} && \
 ENV APP_ROOT .
 ENV HOME     /opt/ruby
 ENV PATH     $HOME/bin:$PATH
-
-ENV STI_SCRIPTS_URL https://raw.githubusercontent.com/openshift/ruby-19-centos/master/.sti/bin
 
 WORKDIR     /opt/ruby/src
 USER ruby
