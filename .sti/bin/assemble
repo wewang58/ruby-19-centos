@@ -19,7 +19,7 @@ function rake_assets_precompile() {
 
 if [ -e /tmp/artifacts/gems.tgz ]; then
   echo "Restoring build artifacts"
-  pushd / >/dev/null
+  pushd ${HOME} >/dev/null
   tar zxf /tmp/artifacts/gems.tgz
   popd >/dev/null
 fi
@@ -35,8 +35,6 @@ pushd "$app_runtime_dir/${APP_ROOT}" >/dev/null
 echo "---> Building your Ruby application from source"
 
 if [ -f Gemfile ]; then
-  echo "---> Installing dependencies using Bundler"
-
   ADDTL_BUNDLE_ARGS=""
   if [ -f Gemfile.lock ]; then
     ADDTL_BUNDLE_ARGS="--deployment"
@@ -53,7 +51,11 @@ if [ -f Gemfile ]; then
   # bundle install command finish. Thus the bundle install cannot receive SIGINT
   # from console (ctrl+c)
   #
+  echo "---> Running 'bundle install ${ADDTL_BUNDLE_ARGS}'"
   bundle install --path ${HOME}/bundle ${ADDTL_BUNDLE_ARGS}
+
+  echo "---> Cleaning up unused ruby gems"
+  bundle clean -V
 fi
 
 rake_assets_precompile
