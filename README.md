@@ -24,7 +24,7 @@ Repository organization
 
 * **`.sti/bin/`**
 
-  This folder contains scripts that are run by the [STI](https://github.com/openshift/geard/tree/master/sti):
+  This folder contains scripts that are run by [STI](https://github.com/openshift/geard/tree/master/sti):
 
   *   **assemble**
 
@@ -53,14 +53,14 @@ Repository organization
 
       After the application image is built, we want to check that when we create a new
       container based on that image, this container will respond to HTTP calls.
-      This image contains sample Ruby application in the **test-app** folder. This
+      This image contains a sample Ruby application in the **test-app** folder. This
       sample application is run when a test is performed.
 
 * **`ruby/`**
 
   This folder is a skeleton of the `$HOME` folder, which is set to `/opt/ruby`.
   It provides a Ruby shebang helper (`ruby` script) and the `usage` script,
-  which STI use to print a usage message when you run this image outside STI.
+  which STI uses to print a usage message when you run this image outside STI.
   This folder also provides minimal, production ready configuration for *puma*
   and also tweaked *.bashrc* and *.gemrc* to optimize the installation of ruby
   gems.
