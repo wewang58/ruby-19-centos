@@ -3,6 +3,10 @@
 # Default STI assemble script for the 'centos-ruby' image.
 #
 
+if [ "$1" = "-h" ]; then
+  exec /opt/ruby/bin/usage
+fi
+
 [ -f ${HOME}/.bashrc ] && source ${HOME}/.bashrc
 
 function rake_assets_precompile() {
