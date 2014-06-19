@@ -20,7 +20,7 @@ RUN yum install --assumeyes centos-release-SCL && ( \
      echo "install zlib-devel libxslt-devel libxml2-devel"; \
      echo "install mysql-libs mysql-devel postgresql-devel sqlite-devel"; \
      echo "install nodejs010-nodejs"; \
-     echo "run" ) | yum shell --assumeyes && yum clean all --assumeyes
+     echo "run" ) | yum shell --enablerepo=centosplus --assumeyes && yum clean all --assumeyes
 
 
 # Add configuration files, bashrc and other tweaks
