@@ -12,16 +12,16 @@ MAINTAINER Michal Fojtik <mfojtik@redhat.com>
 
 # Pull in important updates and then install ruby193
 #
-RUN yum install --assumeyes centos-release-SCL && ( \
-     echo "update"; \
-     echo "install gettext tar which ruby193-ruby ruby193-ruby-devel"; \
-     echo "install ruby193-rubygem-bundler ruby193-rubygem-rake"; \
-     echo "install gcc-c++ automake autoconf curl-devel openssl-devel"; \
-     echo "install zlib-devel libxslt-devel libxml2-devel"; \
-     echo "install mysql-libs mysql-devel postgresql-devel sqlite-devel"; \
-     echo "install nodejs010-nodejs"; \
-     echo "run" ) | yum shell --enablerepo=centosplus --assumeyes && yum clean all --assumeyes
-
+RUN yum install -y centos-release-SCL && \ 
+     yum update -y --enablerepo=centosplus && \
+     yum install -y --enablerepo=centosplus \
+      gettext tar which ruby193-ruby ruby193-ruby-devel \
+      ruby193-rubygem-bundler ruby193-rubygem-rake \
+      gcc-c++ automake autoconf curl-devel openssl-devel \
+      zlib-devel libxslt-devel libxml2-devel \
+      mysql-libs mysql-devel postgresql-devel sqlite-devel \
+      nodejs010-nodejs && \
+     yum clean all -y
 
 # Add configuration files, bashrc and other tweaks
 #
