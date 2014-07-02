@@ -3,8 +3,9 @@ Ruby 1.9 - CentOS Docker image
 
 This repository contains the sources and
 [Dockerfile](https://github.com/openshift/ruby-19-centos/blob/master/Dockerfile)
-for the base image users can use to deploy their application sources and create
-the application image they can run using [Docker](http://docker.io) or by [geard](https://github.com/openshift/geard/).
+of the base image for deploying Ruby 1.9 applications as reproducible Docker
+images. The resulting images can be run either by [Docker](http://docker.io)
+or using [geard](https://github.com/openshift/geard/).
 
 Installation
 ---------------
@@ -85,21 +86,28 @@ Environment variables
 Usage
 ---------------------
 
-**When running with standalone STI:**
+**Building the [sinatra-app-example](https://github.com/mfojtik/sinatra-app-example) Ruby 1.9 application..**
 
-```
+1. **using standalone [STI](https://github.com/openshift/geard/tree/master/sti) and running the resulting image by [Docker](http://docker.io):**
+    
+    ```
 $ sti build git://github.com/mfojtik/sinatra-app-example openshift/ruby-19-centos sinatra-app
 $ docker run -p 9292:9292 sinatra-app
 ```
-
-**When running under geard:**
-
-```
+    
+2. **using `gear build` and running the resulting image as a systemd unit via [geard](https://github.com/openshift/geard/):**
+    
+    ```
 $ gear build git://github.com/mfojtik/sinatra-app-example openshift/ruby-19-centos sinatra-app
-$ gear list-units
+$ gear install sinatra-app sinatra-app-1 -p 9292:9292
 $ gear start sinatra-app-1
+$ gear list-units
 ```
 
+**Accessing the application:**
+```
+$ curl 127.0.0.1:9292
+```
 
 Copyright
 --------------------
