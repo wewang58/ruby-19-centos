@@ -7,7 +7,7 @@
 # can use 'centos-ruby-extended' image instead.
 #
 
-FROM       centos
+FROM       centos:centos6
 MAINTAINER Michal Fojtik <mfojtik@redhat.com>
 
 # Pull in important updates and then install ruby193
