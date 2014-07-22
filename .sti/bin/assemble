@@ -62,7 +62,9 @@ if [ -f Gemfile ]; then
   bundle clean -V
 fi
 
-rake_assets_precompile
+if [[ "$RAILS_ENV" == "production" || "$RACK_ENV" == "production" ]]; then
+  rake_assets_precompile
+fi
 
 # TODO: Add `rake db:migrate` if linked with DB container
 
